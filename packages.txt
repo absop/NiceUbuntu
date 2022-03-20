@@ -1,0 +1,15 @@
++ chrome-gnome-shell
++ gnome-tweaks
++ gnome-tweak-tool
++ fonts-firacode
++ language-pack-en-base
++ language-pack-en
++ language-pack-gnome-en-base
++ language-pack-gnome-en
++ language-pack-gnome-zh-hans
++ language-pack-zh-hans
++ open-vm-tools-desktop
++ net-tools
++ vim
+
+- firefox
