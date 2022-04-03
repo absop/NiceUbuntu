@@ -4,8 +4,12 @@
 USER=`logname`
 HOME=/home/$USER
 
+xrun() {
+  sudo -u $USER $*
+}
+
 install_extension() {
-  gdbus call \
+  xrun gdbus call \
     --session \
     --dest org.gnome.Shell.Extensions \
     --object-path /org/gnome/Shell/Extensions \
@@ -15,7 +19,7 @@ install_extension() {
 echo "Change LANGUAGE of user-dirs to English"
 lang=$LANG
 export LANG=en_US
-sudo -u $USER xdg-user-dirs-gtk-update
+xrun xdg-user-dirs-gtk-update
 export LANG=$lang
 
 source $HOME/.config/user-dirs.dirs
@@ -34,22 +38,22 @@ done
 
 DEB=google-chrome-stable_current_amd64.deb
 echo "Download $DEB into $XDG_DOWNLOAD_DIR/"
-wget -O $XDG_DOWNLOAD_DIR/$DEB https://dl.google.com/linux/direct/$DEB
+xrun wget -O $XDG_DOWNLOAD_DIR/$DEB https://dl.google.com/linux/direct/$DEB
 chmod 755 $XDG_DOWNLOAD_DIR/$DEB
 sudo apt install $XDG_DOWNLOAD_DIR/$DEB
 
-echo "Copy wallpapers into $XDG_PICTURES_DIR/"
-cp -r Pictures/* $XDG_PICTURES_DIR/
-
 echo "Copy .vimrc as $HOME/.vimrc"
-cp home/.vimrc $HOME/
+xrun cp home/.vimrc $HOME/
+
+echo "Copy wallpapers into $XDG_PICTURES_DIR/"
+xrun cp -r Pictures/* $XDG_PICTURES_DIR/
 
 echo "Extract themes files into $HOME/.themes/"
-unzip "home/.themes/*.zip" -d $HOME/.themes/ >/dev/null
+xrun unzip "home/.themes/*.zip" -d $HOME/.themes/ >/dev/null
 
 echo "Extract icons files into $HOME/.icons/"
-mkdir -p $HOME/.icons/
-tar -xvf home/.icons/*.tar.xz -C $HOME/.icons/ >/dev/null
+xrun mkdir -p $HOME/.icons/
+xrun tar -xvf home/.icons/*.tar.xz -C $HOME/.icons/ >/dev/null
 
 echo "Copy grub into /etc/default/"
 sudo cp grub /etc/default/
@@ -68,8 +72,8 @@ install_extension "ssm-gnome@lgiki.net"
 # reproduce it in other machines, so that you will get
 # consistent appearances in different machines.
 echo -n "Load desktop..."
-dconf load /org/ < <(sed s:/absop/:/$USER/: org.dconf)
+xrun dconf load /org/ < <(sed s:/absop/:/$USER/: org.dconf)
 echo "done"
 
-gsettings set org.gnome.desktop.interface scaling-factor 2
-xrandr --output Virtual1 --scale 1x1
+xrun gsettings set org.gnome.desktop.interface scaling-factor 2
+xrun xrandr --output Virtual1 --scale 1x1
