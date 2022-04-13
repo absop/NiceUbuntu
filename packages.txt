@@ -1,4 +1,5 @@
 + chrome-gnome-shell
++ gnome-shell-extensions
 + gnome-tweaks
 + gnome-tweak-tool
 + fonts-firacode
